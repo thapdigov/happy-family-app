@@ -1,9 +1,12 @@
-package az.turing.happyfamilyapp.entity;
+package az.turing.happyfamilyapp.entity.human;
+
+import az.turing.happyfamilyapp.entity.pet.Pet;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Random;
 
-public class Family {
+public class Family implements HumanCreator {
     private Human father;
     private Human mother;
     private Human[] children;
@@ -32,7 +35,7 @@ public class Family {
         child.setFamily(this);
     }
 
-    public boolean removeChild(Human child) {
+    public boolean deleteChild(Human child) {
         int index = -1;
         for (int i = 0, j = 0; i < children.length; i++) {
             if (children[i].equals(child)) {
@@ -43,6 +46,20 @@ public class Family {
         if (index == -1) {
             return false;
         }
+        getChildren(index);
+        child.setFamily(null);
+        return true;
+    }
+
+    public boolean deleteIndexChild(int index) {
+        if (!(index >= 0 && index < children.length)) {
+            return false;
+        }
+        getChildren(index);
+        return true;
+    }
+
+    private void getChildren(int index) {
         Human[] newChildren = new Human[children.length - 1];
         for (int i = 0, j = 0; i < children.length; i++) {
             if (i != index) {
@@ -50,12 +67,22 @@ public class Family {
             }
         }
         children = newChildren;
-        child.setFamily(null);
-        return true;
     }
 
     public int getCountFamily() {
         return 2 + children.length;
+    }
+
+    @Override
+    public Human burnChild() {
+        String[] manName = {"Jon", "Alex", "Muller"};
+        String[] womanName = {"Jon", "Alex", "Muller"};
+        boolean isMan = new Random().nextBoolean();
+        String name = isMan ? manName[new Random().nextInt(2)] : womanName[new Random().nextInt(2)];
+        Human child = isMan ? new Man(name, getFather().getSurname(), "2024/11/28") :
+                new Woman(name, getFather().getSurname(), "2024/11/28");
+        child.setFamily(this);
+        return child;
     }
 
     @Override

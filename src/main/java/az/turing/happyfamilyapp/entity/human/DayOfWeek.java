@@ -1,4 +1,4 @@
-package az.turing.happyfamilyapp.entity;
+package az.turing.happyfamilyapp.entity.human;
 
 public enum DayOfWeek {
     MONDAY,
