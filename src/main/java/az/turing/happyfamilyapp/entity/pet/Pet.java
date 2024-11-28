@@ -1,9 +1,9 @@
-package az.turing.happyfamilyapp.entity;
+package az.turing.happyfamilyapp.entity.pet;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Pet {
+public abstract class Pet {
     private Species species;
     private String nickName;
     private Integer age;
@@ -85,14 +85,7 @@ public class Pet {
         System.out.println("I am eating!");
     }
 
-    public void respond() {
-        System.out.printf("Hello,owner. I am %s.I miss you!", nickName);
-    }
-
-    public void foul() {
-        System.out.println("I need to cover it up!");
-    }
-
+    public abstract void respond();
     @Override
     protected void finalize() throws Throwable {
         System.out.println("Pet object is being removed!: " + this.toString());
@@ -101,7 +94,7 @@ public class Pet {
 
     @Override
     public String toString() {
-        return species + "{nickName=" + nickName + " ,age=" + age + "  ,trickLevel=" + trickLevel +
+        return species.name() + " " + species + "{nickName=" + nickName + " ,age=" + age + "  ,trickLevel=" + trickLevel +
                 " ,habbits=" + Arrays.toString(habbits);
     }
 

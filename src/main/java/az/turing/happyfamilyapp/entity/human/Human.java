@@ -1,4 +1,6 @@
-package az.turing.happyfamilyapp.entity;
+package az.turing.happyfamilyapp.entity.human;
+
+import az.turing.happyfamilyapp.entity.pet.Pet;
 
 import java.util.Arrays;
 import java.util.Objects;
