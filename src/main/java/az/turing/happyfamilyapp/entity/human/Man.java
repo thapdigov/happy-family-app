@@ -1,12 +1,18 @@
 package az.turing.happyfamilyapp.entity.human;
 
+import java.util.Map;
+
 public final class Man extends Human {
     public Man(String name, String surname) {
         super(name, surname);
     }
 
-    public Man(String name, String surname, String dateOfYear) {
-        super(name, surname, dateOfYear);
+    public Man(String name, String surname, String dateOfYear, Integer IQ) {
+        super(name, surname, dateOfYear, IQ);
+    }
+
+    public Man(String name, String surname, String birthDate, Integer IQ, Map<DayOfWeek, String> schedule) {
+        super(name, surname, birthDate, IQ, schedule);
     }
 
     @Override
