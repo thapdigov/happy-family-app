@@ -12,8 +12,7 @@ public class Family implements HumanCreator {
     private Human mother;
     private List<Human> children;
     private Pet pet;
-    public static int count = 1;
-
+    public static int count = 0;
 
     public Family(Human father, Human mother) {
         this.father = father;
