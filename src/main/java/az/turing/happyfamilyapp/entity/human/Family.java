@@ -2,26 +2,28 @@ package az.turing.happyfamilyapp.entity.human;
 
 import az.turing.happyfamilyapp.entity.pet.Pet;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
 public class Family implements HumanCreator {
     private Human father;
     private Human mother;
-    private Human[] children;
+    private List<Human> children;
     private Pet pet;
-    public int index = 0;
+    public static int count = 1;
+
 
     public Family(Human father, Human mother) {
         this.father = father;
         this.mother = mother;
         father.setFamily(this);
         mother.setFamily(this);
-        children = new Human[index];
+        children = new ArrayList<>();
     }
 
-    public Family(Human father, Human mother, Human[] children, Pet pet) {
+    public Family(Human father, Human mother, List<Human> children, Pet pet) {
         this.father = father;
         this.mother = mother;
         this.children = children;
@@ -29,48 +31,27 @@ public class Family implements HumanCreator {
     }
 
     public void addChild(Human child) {
-        Human[] newChildren = Arrays.copyOf(children, children.length + 1);
-        newChildren[newChildren.length - 1] = child;
-        children = newChildren;
+        children.add(child);
         child.setFamily(this);
     }
 
     public boolean deleteChild(Human child) {
-        int index = -1;
-        for (int i = 0, j = 0; i < children.length; i++) {
-            if (children[i].equals(child)) {
-                index = i;
-                break;
-            }
-        }
-        if (index == -1) {
-            return false;
-        }
-        getChildren(index);
         child.setFamily(null);
-        return true;
+        return children.remove(child);
+
     }
 
     public boolean deleteIndexChild(int index) {
-        if (!(index >= 0 && index < children.length)) {
-            return false;
+        Human removeChild = children.remove(index);
+        if (removeChild != null) {
+            removeChild.setFamily(null);
+            return true;
         }
-        getChildren(index);
-        return true;
-    }
-
-    private void getChildren(int index) {
-        Human[] newChildren = new Human[children.length - 1];
-        for (int i = 0, j = 0; i < children.length; i++) {
-            if (i != index) {
-                newChildren[j++] = children[i];
-            }
-        }
-        children = newChildren;
+        return false;
     }
 
     public int getCountFamily() {
-        return 2 + children.length;
+        return 2 + children.size();
     }
 
     @Override
@@ -78,11 +59,35 @@ public class Family implements HumanCreator {
         String[] manName = {"Jon", "Alex", "Muller"};
         String[] womanName = {"Jon", "Alex", "Muller"};
         boolean isMan = new Random().nextBoolean();
+        Integer IQ = (getFather().getIQ() + getMother().getIQ()) / 2;
         String name = isMan ? manName[new Random().nextInt(2)] : womanName[new Random().nextInt(2)];
-        Human child = isMan ? new Man(name, getFather().getSurname(), "2024/11/28") :
-                new Woman(name, getFather().getSurname(), "2024/11/28");
+        Human child = isMan ? new Man(name, getFather().getSurname(), "29/11/2024", IQ) :
+                new Woman(name, getFather().getSurname(), "29/11/2024", IQ);
         child.setFamily(this);
         return child;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(father, mother, children);
+    }
+
+    public String prettyFormat() {
+        StringBuilder st = new StringBuilder();
+        List<Human> children = getChildren();
+        String isMan = null;
+        for (Human child : children) {
+            if (child instanceof Man) {
+                isMan = "boy:";
+            } else {
+                isMan = "girl:";
+            }
+        }
+        st.append("Family ").append(count).append("\n").append("\tmother: {").append(getMother()).append("},\n").append("\tfather: {")
+                .append(getFather()).append("},\n").append("\tchildren:\n").append("\t\t").append(isMan)
+                .append(children).append("\n").append("\tpets: ").append(getPet());
+        count++;
+        return st.toString();
     }
 
     @Override
@@ -107,11 +112,11 @@ public class Family implements HumanCreator {
         this.mother = mother;
     }
 
-    public Human[] getChildren() {
+    public List<Human> getChildren() {
         return children;
     }
 
-    public void setChildren(Human[] children) {
+    public void setChildren(List<Human> children) {
         this.children = children;
     }
 
@@ -128,20 +133,13 @@ public class Family implements HumanCreator {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Family family = (Family) o;
-        return father.equals(family.father) && mother.equals(family.mother) && Arrays.equals(children, family.children);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(father, mother);
-        result = 31 * result + Arrays.hashCode(children);
-        return result;
+        return father.equals(family.father) && mother.equals(family.mother);
     }
 
     @Override
     public String toString() {
-        return String.format("Family: \nfather=%s %s ,mother=%s %s \n,children=%s ,pet=%s", father.getName(), father.getSurname()
-                , mother.getName(), mother.getSurname(),
-                Arrays.toString(children), pet);
+        return String.format("Family: \nfather=%s %s ,mother=%s %s \n,children=%s ,pet=%s", father.getName(),
+                father.getSurname(), mother.getName(), mother.getSurname(),
+                children, pet);
     }
 }

@@ -1,14 +1,14 @@
 package az.turing.happyfamilyapp.entity.pet;
 
-import java.util.Arrays;
 import java.util.Objects;
+import java.util.Set;
 
 public abstract class Pet {
     private Species species;
     private String nickName;
     private Integer age;
     private Integer trickLevel;
-    String[] habbits;
+    Set<String> habbits;
 
     public Pet() {
     }
@@ -18,7 +18,7 @@ public abstract class Pet {
         this.nickName = nickName;
     }
 
-    public Pet(Species species, String nickName, Integer age, Integer trickLevel, String[] habbits) {
+    public Pet(Species species, String nickName, Integer age, Integer trickLevel, Set<String> habbits) {
         this.species = species;
         this.nickName = nickName;
         this.age = age;
@@ -58,11 +58,11 @@ public abstract class Pet {
         this.trickLevel = trickLevel;
     }
 
-    public String[] getHabbits() {
+    public Set<String> getHabbits() {
         return habbits;
     }
 
-    public void setHabbits(String[] habbits) {
+    public void setHabbits(Set<String> habbits) {
         this.habbits = habbits;
     }
 
@@ -71,13 +71,14 @@ public abstract class Pet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Pet pet = (Pet) o;
-        return species.equals(pet.species) && nickName.equals(pet.nickName) && age.equals(pet.age) && trickLevel.equals(pet.trickLevel) && Arrays.equals(habbits, pet.habbits);
+        return species.equals(pet.species) && nickName.equals(pet.nickName) &&
+                age.equals(pet.age) && trickLevel.equals(pet.trickLevel);
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(species, nickName, age, trickLevel);
-        result = 31 * result + Arrays.hashCode(habbits);
+        result = 31 * result;
         return result;
     }
 
@@ -86,6 +87,7 @@ public abstract class Pet {
     }
 
     public abstract void respond();
+
     @Override
     protected void finalize() throws Throwable {
         System.out.println("Pet object is being removed!: " + this.toString());
@@ -94,10 +96,13 @@ public abstract class Pet {
 
     @Override
     public String toString() {
-        return species.name() + " " + species + "{nickName=" + nickName + " ,age=" + age + "  ,trickLevel=" + trickLevel +
-                " ,habbits=" + Arrays.toString(habbits);
+        return "species=" + species.name() + " ,nickName=" + nickName + " ,age=" + age + "  ,trickLevel=" + trickLevel +
+                " ,habbits=" + habbits;
     }
+/*
+	pets: [{species=DOG, nickname='Jack', age=3, trickLevel=35, habits=[sleep]}, {species=CAT, nickname='Oscar', age=5, trickLevel=81, habits=[eat, play]}]
 
+ */
 }
 
 

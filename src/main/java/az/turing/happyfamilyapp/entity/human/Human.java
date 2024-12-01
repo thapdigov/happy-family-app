@@ -2,16 +2,19 @@ package az.turing.happyfamilyapp.entity.human;
 
 import az.turing.happyfamilyapp.entity.pet.Pet;
 
-import java.util.Arrays;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
 public class Human {
     private String name;
     private String surname;
-    private String dateOfYear;
+    private LocalDate birthDate;
     private Integer IQ;
-    private String[][] schedule;
+    private Map<DayOfWeek, String> schedule;
     private Family family;
     private Pet pet;
 
@@ -23,16 +26,23 @@ public class Human {
         this.surname = surname;
     }
 
-    public Human(String name, String surname, String dateOfYear) {
+    public Human(String name, String surname, LocalDate birthDate) {
         this.name = name;
         this.surname = surname;
-        this.dateOfYear = dateOfYear;
+        this.birthDate = birthDate;
     }
 
-    public Human(String name, String surname, String dateOfYear, Integer IQ, String[][] schedule) {
+    public Human(String name, String surname, String birthDate, Integer IQ) {
         this.name = name;
         this.surname = surname;
-        this.dateOfYear = dateOfYear;
+        this.birthDate = LocalDate.parse(birthDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        this.IQ = IQ;
+    }
+
+    public Human(String name, String surname, String birthDate, Integer IQ, Map<DayOfWeek, String> schedule) {
+        this.name = name;
+        this.surname = surname;
+        this.birthDate = LocalDate.parse(birthDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         this.IQ = IQ;
         this.schedule = schedule;
     }
@@ -53,12 +63,12 @@ public class Human {
         this.surname = surname;
     }
 
-    public String getDateOfYear() {
-        return dateOfYear;
+    public LocalDate getbirthDate() {
+        return birthDate;
     }
 
-    public void setDateOfYear(String dateOfYear) {
-        this.dateOfYear = dateOfYear;
+    public void setbirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 
     public Integer getIQ() {
@@ -69,11 +79,11 @@ public class Human {
         this.IQ = IQ;
     }
 
-    public String[][] getSchedule() {
+    public Map<DayOfWeek, String> getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(String[][] schedule) {
+    public void setSchedule(Map<DayOfWeek, String> schedule) {
         this.schedule = schedule;
     }
 
@@ -99,15 +109,20 @@ public class Human {
         if (o == null || getClass() != o.getClass()) return false;
         Human human = (Human) o;
         return name.equals(human.name) && surname.equals(human.surname) &&
-                Objects.equals(dateOfYear, human.dateOfYear) &&
-                Objects.equals(IQ, human.IQ) && Arrays.deepEquals(schedule, human.schedule);
+                Objects.equals(birthDate, human.birthDate) &&
+                Objects.equals(IQ, human.IQ);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(name, surname, dateOfYear, IQ);
-        result = 31 * result + Arrays.deepHashCode(schedule);
+        int result = Objects.hash(name, surname, birthDate, IQ);
+        result = 31 * result;
         return result;
+    }
+
+    public String describeAge() {
+        Period age = Period.between(getbirthDate(), LocalDate.now());
+        return String.format("age=%d ,month=%d ,day=%s", age.getYears(), age.getMonths(), age.getDays());
     }
 
     public void greetPet() {
@@ -148,7 +163,8 @@ public class Human {
 
     @Override
     public String toString() {
-        return "name=" + getName() + " ,surname=" + getSurname() + " ,dateOfYear=" + getDateOfYear() + " ,IQ=" + getIQ() +
-                " ,schedule=" + Arrays.deepToString(getSchedule()) + '\n';
+        return "name=" + getName() + " ,surname=" + getSurname() +
+                " ,birthDate=" + getbirthDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " ,IQ=" + getIQ() +
+                " ,schedule=" + schedule;
     }
 }
